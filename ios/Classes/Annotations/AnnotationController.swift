@@ -254,7 +254,7 @@ extension AppleMapController: AnnotationDelegate {
         } else {
             annotationView = FlutterAnnotationView(annotation: annotation, reuseIdentifier: id)
         }
-        annotationView.image = annotation.icon.image
+        annotationView.image = annotation.icon.image?.rotate(radians: Float(annotation.rotation))
         annotationView.stickyZPosition = annotation.zIndex
         return annotationView
     }

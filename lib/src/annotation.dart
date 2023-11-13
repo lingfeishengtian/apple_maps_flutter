@@ -152,6 +152,7 @@ class Annotation {
     this.infoWindow = InfoWindow.noText,
     this.position = const LatLng(0.0, 0.0),
     this.onTap,
+    this.rotation = 0,
     this.visible = true,
     this.zIndex = -1,
     this.onDragEnd,
@@ -159,6 +160,9 @@ class Annotation {
 
   /// Uniquely identifies a [Annotation].
   final AnnotationId annotationId;
+
+  /// The rotation of the annotation in radian clockwise from north.
+  final double rotation;
 
   /// The opacity of the annotation, between 0.0 and 1.0 inclusive.
   ///
@@ -211,6 +215,7 @@ class Annotation {
     BitmapDescriptor? iconParam,
     InfoWindow? infoWindowParam,
     LatLng? positionParam,
+    double? rotation,
     bool? visibleParam,
     double? zIndexParam,
     VoidCallback? onTapParam,
@@ -224,6 +229,7 @@ class Annotation {
       icon: iconParam ?? icon,
       infoWindow: infoWindowParam ?? infoWindow,
       position: positionParam ?? position,
+      rotation: rotation ?? this.rotation,
       onTap: onTapParam ?? onTap,
       visible: visibleParam ?? visible,
       zIndex: zIndexParam ?? zIndex,
@@ -242,6 +248,7 @@ class Annotation {
 
     addIfPresent('annotationId', annotationId.value);
     addIfPresent('alpha', alpha);
+    addIfPresent('rotation', rotation);
     addIfPresent('anchor', _offsetToJson(anchor));
     addIfPresent('draggable', draggable);
     addIfPresent('icon', icon._toJson());

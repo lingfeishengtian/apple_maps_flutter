@@ -17,6 +17,7 @@ class FlutterAnnotation: NSObject, MKAnnotation {
     var image: UIImage?
     var alpha: Double?
     var anchor: Offset = Offset()
+    var rotation: Double
     var isDraggable: Bool?
     var wasDragged: Bool = false
     var isVisible: Bool? = true
@@ -30,6 +31,7 @@ class FlutterAnnotation: NSObject, MKAnnotation {
         let infoWindow: Dictionary<String, Any> = annotationData["infoWindow"] as! Dictionary<String, Any>
         let lat: Double = position[0]
         let long: Double = position[1]
+        self.rotation = annotationData["rotation"] as? Double ?? 0
         self.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
         self.title = infoWindow["title"] as? String
         self.subtitle = infoWindow["snippet"] as? String
