@@ -94,7 +94,14 @@ extension AppleMapController: AnnotationDelegate {
                 let newAnnotation = FlutterAnnotation.init(fromDictionary: annotationData, registrar: registrar)
                 if annotationToChange != newAnnotation {
                     if !annotationToChange.wasDragged {
-                        addAnnotation(annotation: newAnnotation)
+                        UIView.animate(withDuration: 0.2) {
+                            annotationToChange.coordinate = newAnnotation.coordinate
+                            annotationToChange.rotation = newAnnotation.rotation
+                            let realAnnotation = oldAnnotations.filter({($0 as? FlutterAnnotation)?.id == annotationData["annotationId"] as? String})[0]
+                            let annonView = self.mapView.view(for: realAnnotation)
+                            annonView?.annotation = newAnnotation
+                            annonView?.image = newAnnotation.icon.image?.rotate(radians: Float(newAnnotation.rotation * .pi / 180))
+                        }
                     } else {
                         annotationToChange.wasDragged = false
                     }
@@ -255,7 +262,17 @@ extension AppleMapController: AnnotationDelegate {
             annotationView = FlutterAnnotationView(annotation: annotation, reuseIdentifier: id)
         }
         
-        annotationView.image = annotation.icon.image?.rotate(radians: Float(annotation.rotation * .pi) / 180)
+        annotationView.image = annotation.icon.image?.rotate(radians: Float(annotation.rotation * .pi / 180))
+//        let imgView = UIImageView(image: annotation.icon.image)
+////        if #available(iOS 16.0, *) {
+////            imgView.anchorPoint = annotationView.anchorPoint
+////        } else {
+////
+////        }
+//        imgView.contentMode = .center
+//        imgView.transform = CGAffineTransform(rotationAngle: CGFloat(annotation.rotation * .pi / 180))
+//        annotationView.addSubview(imgView)
+        //imgView.layer.anchorPoint = CGPoint(x: 1, y: 1)
         
         annotationView.stickyZPosition = annotation.zIndex
         return annotationView
