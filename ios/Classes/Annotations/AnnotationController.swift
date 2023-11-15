@@ -97,10 +97,40 @@ extension AppleMapController: AnnotationDelegate {
                         UIView.animate(withDuration: 0.2) {
                             annotationToChange.coordinate = newAnnotation.coordinate
                             annotationToChange.rotation = newAnnotation.rotation
-                            let realAnnotation = oldAnnotations.filter({($0 as? FlutterAnnotation)?.id == annotationData["annotationId"] as? String})[0]
-                            let annonView = self.mapView.view(for: realAnnotation)
-                            annonView?.annotation = newAnnotation
-                            annonView?.image = newAnnotation.icon.image?.rotate(radians: Float(newAnnotation.rotation * .pi / 180))
+                            annotationToChange.title = newAnnotation.title
+                            annotationToChange.subtitle = newAnnotation.subtitle
+                            if let annonView = self.mapView.view(for: annotationToChange) {
+                                annonView.image = newAnnotation.icon.image?.rotate(radians: Float(newAnnotation.rotation * .pi / 180))
+                                
+//                                    let lines = newAnnotation.subtitle?.split(whereSeparator: { $0.isNewline })
+//                                    if lines != nil {
+//                                        for view in (annonView.detailCalloutAccessoryView as! UIStackView).arrangedSubviews {
+//                                            (annonView.detailCalloutAccessoryView as! UIStackView).removeArrangedSubview(view)
+//                                            view.removeFromSuperview()
+//                                        }
+//                                        annonView.detailCalloutAccessoryView?.layoutIfNeeded()
+//                                        for line in lines! {
+//                                            let subtitle = UILabel()
+//                                            subtitle.text = String(line)
+//                                            (annonView.detailCalloutAccessoryView as! UIStackView).addArrangedSubview(subtitle)
+//                                        }
+//                                    }
+                                
+                                    let lines = newAnnotation.subtitle?.split(whereSeparator: { $0.isNewline })
+                                    if lines != nil {
+                                        let customCallout = UIStackView()
+                                        customCallout.axis = .vertical
+                                        customCallout.alignment = .fill
+                                        customCallout.distribution = .fill
+                                        for line in lines! {
+                                            let subtitle = UILabel()
+                                            subtitle.text = String(line)
+                                            customCallout.addArrangedSubview(subtitle)
+                                        }
+                                        annonView.detailCalloutAccessoryView = customCallout
+                                    }
+                                
+                            }
                         }
                     } else {
                         annotationToChange.wasDragged = false
